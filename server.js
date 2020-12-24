@@ -24,6 +24,18 @@ app.get('/search',(req,res)=>{
 app.get('/insert',(req,res)=>{
     res.render('insert')
 })
+app.get('/delete',async (req,res)=>{
+    //id string from URL 
+    let id = req.query.id;
+    //connect id from url to mongodb
+    let ObjectID = require('mongodb').ObjectID(id);
+    // condition to delete
+    let condition ={'_id':ObjectID}
+    let client = await MongoClient.connect(url)
+    let dbo = client.db("ProductDB")
+    await dbo.collection("student").deleteOne(condition);
+    res.redirect('/')
+})
 
 app.post('/doDelete', async(req,res)=>{
     let id = req.query.id;
@@ -72,11 +84,11 @@ app.post('/doSearch',async (req,res)=>{
     let nameSearch = req.body.txtSearch;
     let client= await MongoClient.connect(url);
     let dbo = client.db("ProductDB");
-    let results = await dbo.collection("student").find({productName:nameSearch}).toArray();
+    let results = await dbo.collection("student").
+    find({productName: new RegExp(nameSearch,'i')}).toArray();
     res.render('index',{model:results})
 })
 
-//a
 const PORT = process.env.PORT || 3000;
 app.listen(PORT)
 console.log('Server is running')

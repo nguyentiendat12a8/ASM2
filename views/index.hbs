@@ -23,10 +23,17 @@
             <td>{{productName}}</td>
             <td>{{color}}</td>
             <td>{{price}}</td>
-            <td><form action="doDelete" method="post"><input type="submit" value="Delete"></form></td>
+            <td><a href="/delete?id={{_id}}" onclick="return confirmDelete('{{productName}}')"> Delete </a>
+            <a href="/edit?id={{_id}}" onclick="return confirmDelete()"> Edit </a>
+            </td>
         </tr>
     {{/each}}
     </table>
-    {{> footer}}
+    {{> footer}}                                                          
+    <script>
+        function confirmDelete(name){
+            return confirm('are you sure to delete this ??'+ name);
+        }
+    </script>
 </body>
 </html>
