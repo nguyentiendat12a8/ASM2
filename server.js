@@ -11,7 +11,7 @@ var url = 'mongodb+srv://nguyentiendat12a8:sofm27112000@cluster0.eztba.mongodb.n
 app.get('/', async (req,res)=>{
     let client= await MongoClient.connect(url);
     let dbo = client.db("ProductDB");
-    let results = await dbo.collection("student").find({}).toArray();
+    let results = await dbo.collection("product").find({}).toArray();
     res.render('index',{model:results})
 })
 var bodyParser = require("body-parser");
@@ -33,7 +33,7 @@ app.get('/delete',async (req,res)=>{
     let condition ={'_id':ObjectID}
     let client = await MongoClient.connect(url)
     let dbo = client.db("ProductDB")
-    await dbo.collection("student").deleteOne(condition);
+    await dbo.collection("product").deleteOne(condition);
     res.redirect('/')
 })
 app.get('/edit', async(req,res)=>{
@@ -42,24 +42,12 @@ app.get('/edit', async(req,res)=>{
     let condition = {'_id':ObjectID}
     let client = await MongoClient.connect(url)
     let dbo = client.db("ProductDB")
-    let prod = await dbo.collection("student").findOne(condition);
+    let prod = await dbo.collection("product").findOne(condition);
     res.render('edit',{model:prod})
 })
-app.post('/doDelete', async(req,res)=>{
-    let id = req.query.id;
-    var ProductID = require("mongodb").ProductID;
-    console.log(id)
-    let Delete = {"_id":ProductID(id)};
-    let client= await MongoClient.connect(url);
-        let dbo = client.db("ProductDB");
-        await dbo.collection("student").deleteOne(Delete);
-        
-        res.render('/')
-
-})
-
 app.post('/doInsert',async (req,res)=>{
     let nameInput = req.body.txtName;
+    let descriptionInput = req.body.txtDescription;
     let colorInput = req.body.txtColor;
     let priceInput = req.body.txtPrice;
     let errorMsg =  {
@@ -77,12 +65,13 @@ app.post('/doInsert',async (req,res)=>{
     }else{
             let newProduct = {
             productName : nameInput,
+            description: descriptionInput,
             price: priceInput,
             color: colorInput
         }
         let client= await MongoClient.connect(url);
         let dbo = client.db("ProductDB");
-        await dbo.collection("student").insertOne(newProduct);
+        await dbo.collection("product").insertOne(newProduct);
         res.redirect('/')
     }
     
@@ -92,24 +81,25 @@ app.post('/doSearch',async (req,res)=>{
     let nameSearch = req.body.txtSearch;
     let client= await MongoClient.connect(url);
     let dbo = client.db("ProductDB");
-    let results = await dbo.collection("student").
+    let results = await dbo.collection("product").
     find({productName: new RegExp(nameSearch,'i')}).toArray();
     res.render('index',{model:results})
 })
 
 app.post('/doEdit',async (req,res)=>{
     let nameInput = req.body.txtName;
+    let descriptionInput = req.body.txtDescription;
     let colorInput = req.body.txtColor;
     let priceInput = req.body.txtPrice;
     let id = req.body.id;
     
-    let newValues ={$set : {productName: nameInput,price:priceInput,color:colorInput}};
+    let newValues ={$set : {productName: nameInput,description : descriptionInput,price:priceInput,color:colorInput}};
     var ObjectID = require('mongodb').ObjectID;
     let condition = {"_id" : ObjectID(id)};
     
     let client= await MongoClient.connect(url);
     let dbo = client.db("ProductDB");
-    await dbo.collection("student").updateOne(condition,newValues);
+    await dbo.collection("product").updateOne(condition,newValues);
     res.redirect('/');
 })
 
