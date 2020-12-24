@@ -36,7 +36,15 @@ app.get('/delete',async (req,res)=>{
     await dbo.collection("student").deleteOne(condition);
     res.redirect('/')
 })
-
+app.get('/edit', async(req,res)=>{
+    let id = req.query.id;
+    let ObjectID = require('mongodb').ObjectID(id)
+    let condition = {'_id':ObjectID}
+    let client = await MongoClient.connect(url)
+    let dbo = client.db("ProductDB")
+    let prod = await dbo.collection("student").findOne(condition);
+    res.render('edit',{model:prod})
+})
 app.post('/doDelete', async(req,res)=>{
     let id = req.query.id;
     var ProductID = require("mongodb").ProductID;
@@ -87,6 +95,22 @@ app.post('/doSearch',async (req,res)=>{
     let results = await dbo.collection("student").
     find({productName: new RegExp(nameSearch,'i')}).toArray();
     res.render('index',{model:results})
+})
+
+app.post('/doEdit',async (req,res)=>{
+    let nameInput = req.body.txtName;
+    let colorInput = req.body.txtColor;
+    let priceInput = req.body.txtPrice;
+    let id = req.body.id;
+    
+    let newValues ={$set : {productName: nameInput,price:priceInput,color:colorInput}};
+    var ObjectID = require('mongodb').ObjectID;
+    let condition = {"_id" : ObjectID(id)};
+    
+    let client= await MongoClient.connect(url);
+    let dbo = client.db("ProductDB");
+    await dbo.collection("student").updateOne(condition,newValues);
+    res.redirect('/');
 })
 
 const PORT = process.env.PORT || 3000;

@@ -7,7 +7,7 @@
 </head>
 <body style="text-align:center;">
     {{>header}}
-    <h1>Hello world</h1>
+    <h1>Index Page</h1>
     <table border="1" align="center" width = "80%">
         <tr style="color: rgb(111, 0, 255);">
             <th>ID</th>
@@ -24,7 +24,7 @@
             <td>{{color}}</td>
             <td>{{price}}</td>
             <td><a href="/delete?id={{_id}}" onclick="return confirmDelete('{{productName}}')"> Delete </a>
-            <a href="/edit?id={{_id}}" onclick="return confirmDelete()"> Edit </a>
+            <a href="/edit?id={{_id}}"> Edit </a>
             </td>
         </tr>
     {{/each}}
