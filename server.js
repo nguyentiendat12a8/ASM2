@@ -94,7 +94,7 @@ app.post('/doEdit',async (req,res)=>{
     let id = req.body.id;
     
     let newValues ={$set : {productName: nameInput,description : descriptionInput,price:priceInput,color:colorInput}};
-    var ObjectID = require('mongodb').ObjectID;
+    var dObjectID = require('mongodb').ObjectID;
     let condition = {"_id" : ObjectID(id)};
     
     let client= await MongoClient.connect(url);
