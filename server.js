@@ -25,11 +25,8 @@ app.get('/insert',(req,res)=>{
     res.render('insert')
 })
 app.get('/delete', async (req,res)=>{
-    //id: string from URL
     let id = req.query.id;
-    //convert id from URL to MongoDB' id
     let ObjectID = require('mongodb').ObjectID(id);
-    //the conditon to delete
     let condition = {'_id': ObjectID}
     let client= await MongoClient.connect(url);
     let dbo = client.db("ProductDB");
