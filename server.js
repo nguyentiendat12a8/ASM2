@@ -25,11 +25,8 @@ app.get('/insert',(req,res)=>{
     res.render('insert')
 })
 app.get('/delete',async (req,res)=>{
-    //id string from URL 
-    let id = req.query.id;
-    //connect id from url to mongodb
+    let id = req.quer.id;
     let ObjectID = require('mongodb').ObjectID(id);
-    // condition to delete
     let condition ={'_id':ObjectID}
     let client = await MongoClient.connect(url)
     let dbo = client.db("ProductDB")
@@ -94,7 +91,7 @@ app.post('/doEdit',async (req,res)=>{
     let id = req.body.id;
     
     let newValues ={$set : {productName: nameInput,description : descriptionInput,price:priceInput,color:colorInput}};
-    var dObjectID = require('mongodb').ObjectID;
+    var ObjectID = require('mongodb').ObjectID;
     let condition = {"_id" : ObjectID(id)};
     
     let client= await MongoClient.connect(url);
@@ -103,6 +100,6 @@ app.post('/doEdit',async (req,res)=>{
     res.redirect('/');
 })
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT)
 console.log('Server is running')
